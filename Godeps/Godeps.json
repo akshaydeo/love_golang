@@ -9,6 +9,11 @@
 		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/yosssi/ace",
+			"Comment": "v0.0.4-24-gdacb18e",
+			"Rev": "dacb18e2c72ef88cbf3f933d64e6192ec44bb25b"
 		}
 	]
 }
