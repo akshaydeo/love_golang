@@ -1,0 +1,69 @@
+= doctype html
+html lang=en
+  head
+    meta charset=utf-8
+    meta http-equiv=Content-Type content="text/html;charset=UTF-8"
+    meta name=viewport content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"        
+    title <3 4 GoLang    
+    = css      
+      #love-button { margin-top:10px; }
+      #love-bites { margin-top:10px; }
+      #card-form { margin-top:10px; margin-right:10px; }
+      #card-button { margin-left:5px; margin-right:5px; }
+      .badge { vertical-align:middle; margin-top:6px; }
+  body
+    .navbar.navbar-default role="navigation"
+      .container-fluid
+        a.navbar-brand
+          | <3 4 GoLang
+
+    .container
+      .row
+        .col-sm-8
+          .row
+            .page-header
+              h2 I love GoLang because...
+          .row
+            form role="form"
+              textarea.form-control rows=4              
+              button.btn.btn-danger.pull-right#love-button type="submit"
+                | Post
+          .row 
+            .page-header 
+              h3 Feed
+            .panel.panel-default#love-bites 
+              .panel-heading
+                | Akshay says
+              .panel-body
+                | Dummy card
+                .form#card-form role="form"
+                  .row
+                    span.badge.pull-right
+                      | 10
+                    button.btn.btn-default.btn-sm.pull-right#card-button
+                      span.glyphicon.glyphicon-thumbs-up
+                    
+            
+
+        .col-sm-4
+          .panel.panel-info
+            .panel-heading
+              | About <3 4 GoLang
+            .panel-body
+              p
+                | <3 4 GoLang is a place where you can express your love for the beauty of GoLang. Feel free to express yourself and let others know your perspective towards GoLang and help spreading the love :).
+              p  
+                | I personally love GoLang and it's construct. There are a lot of small but very interesting facts I find out about GoLang everyday. So thought of creating a simple stream just about GoLang.
+              p
+                | So keep coding and keep loving GoLang 
+
+          .panel.panel-info
+            .panel-heading
+              | Trending GoLang Projects
+            .panel-body
+         
+    = javascript 
+      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+    script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"

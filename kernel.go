@@ -15,10 +15,13 @@ func getPort() string {
 	}
 	return ":" + port
 }
+
 func main() {
 	log.Println("Starting main server")
 	r := mux.NewRouter()
 	pushRoutes(r)
 	http.Handle("/", r)
+	// setting up public assets path
+	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public/"))))
 	http.ListenAndServe(getPort(), nil)
 }

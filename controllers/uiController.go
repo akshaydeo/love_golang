@@ -1,10 +1,16 @@
 package controllers
 
 import (
-	"fmt"
+	"github.com/yosssi/ace"
 	"net/http"
 )
 
 func Home(rw http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(rw, "Testing page")
+	tpl, err := ace.Load("views/home", "", &ace.Options{DynamicReload: true})
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+	if err := tpl.Execute(rw, nil); err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 }
