@@ -21,6 +21,8 @@ html lang=en
       .container-fluid
         a.navbar-brand
           | <3 4 GoLang
+        button.btn.btn-primary.navbar-btn.pull-right
+          | Login With Twitter
 
     .container
       .row
