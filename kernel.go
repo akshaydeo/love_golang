@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"log"
+	"love_golang/dbHelper"
 	"net/http"
 	"os"
 )
@@ -17,7 +18,12 @@ func getPort() string {
 }
 
 func main() {
-	log.Println("Starting main server")
+	log.Println("Initializing database...")
+	if err := dbHelper.IntializeDatabase(); err != nil {
+		panic("Error while initializing database")
+		return
+	}
+	log.Println("Database initialized...")
 	r := mux.NewRouter()
 	pushRoutes(r)
 	http.Handle("/", r)
