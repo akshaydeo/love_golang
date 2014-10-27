@@ -51,8 +51,7 @@ html lang=en
                     | @{{ .PostedBy.TwitterHandle }}
                   |  says 
                 .panel-body
-                  textarea.form-control rows=5 name="post" data-provide="markdown-editable"
-                    | {{ .Post }}
+                  | {{ .Post }}
                   .form#card-form role="form"
                     .row
                       span.badge.pull-right
