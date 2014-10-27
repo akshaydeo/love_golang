@@ -13,11 +13,7 @@ func DB() *gorm.DB {
 }
 
 func IntializeDatabase() error {
-	switch os.Getenv("ENV") {
-	case "dev":
-		db, _ = gorm.Open("postgres", os.Getenv("DB_PATH"))
-		break
-	}
+	db, _ = gorm.Open("postgres", os.Getenv("DB_PATH"))
 	// Get database connection handle [*sql.DB](http://golang.org/pkg/database/sql/#DB)
 	db.DB()
 	// Then you could invoke `*sql.DB`'s functions with it
