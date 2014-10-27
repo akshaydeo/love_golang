@@ -1,7 +1,8 @@
 package models
 
 import (
-	"love_golang/dbHelper"
+	"log"
+	"love_golang/dbWrapper"
 )
 
 type User struct {
@@ -12,5 +13,13 @@ type User struct {
 }
 
 func (user *User) Save() error {
-	return dbHelper.DB().Save(&user).Error()
+	return dbWrapper.DB().Where(User{TwitterHandle: user.TwitterHandle}).FirstOrCreate(user).Error
+}
+
+func GetUserById(id int64) (*User, error) {
+	log.Println("Finding for id", id)
+	var user User
+	dbWrapper.DB().Model(User{}).Where("id = ?", id).Find(&user)
+	log.Println("Found", user.TwitterHandle)
+	return &user, nil
 }

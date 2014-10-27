@@ -11,6 +11,7 @@ html lang=en
     = css      
       #topbar { background:#E0EBF5; }
       .navbar-brand { color:#000000; }
+      .input-group { margin-bottom:10px; }
       #love-button { margin-top:10px; }
       #love-bites { margin-top:10px; }
       #card-form { margin-top:10px; margin-right:10px; }
@@ -21,8 +22,9 @@ html lang=en
       .container-fluid
         a.navbar-brand
           | <3 4 GoLang
-        button.btn.btn-primary.navbar-btn.pull-right
-          | Login With Twitter
+        // form role="form" action="/user/login" method="POST"
+        //   button.btn.btn-primary.navbar-btn.pull-right
+        //     | Login With Twitter
 
     .container
       .row
@@ -31,27 +33,33 @@ html lang=en
             .page-header
               h2 I love GoLang because...
           .row
-            form role="form"
+            form role="form" action="/post" method="POST"
+              .input-group
+                span.input-group-addon 
+                  | @
+                input.form-control type="text" placeholder="twitter handle" name="twitter_handle"
               textarea.form-control rows=5 name="post" data-provide="markdown"
               button.btn.btn-danger.pull-right#love-button type="submit"
                 | Post
           .row 
             .page-header 
               h3 Feed
-            .panel.panel-default#love-bites 
-              .panel-heading
-                | Akshay says
-              .panel-body
-                | Dummy card
-                .form#card-form role="form"
-                  .row
-                    span.badge.pull-right
-                      | 10
-                    button.btn.btn-default.btn-sm.pull-right#card-button
-                      span.glyphicon.glyphicon-thumbs-up
-                    
-            
-
+            {{ range .Posts}}
+              .panel.panel-default#love-bites 
+                .panel-heading
+                  a href="https://twitter.com/{{ .PostedBy.TwitterHandle }}" target="_blank"
+                    | @{{ .PostedBy.TwitterHandle }}
+                  |  says 
+                .panel-body
+                  textarea.form-control rows=5 name="post" data-provide="markdown-editable"
+                    | {{ .Post }}
+                  .form#card-form role="form"
+                    .row
+                      span.badge.pull-right
+                        | {{ .TotalUpvotes }}
+                      button.btn.btn-default.btn-sm.pull-right#card-button
+                        span.glyphicon.glyphicon-thumbs-up
+            {{ end }}
         .col-sm-3
           .panel.panel-default
             .panel-heading#topbar

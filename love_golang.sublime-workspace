@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"boo",
+				"bootstrap-markdown"
+			],
+			[
+				"o",
+				"Order	*gorm.DB ƒ"
+			],
+			[
+				"Pos",
+				"PostedBy	User ν"
+			],
+			[
+				"F",
+				"Find	*gorm.DB ƒ"
+			],
+			[
+				"POs",
+				"PostedBy	User ν"
+			],
+			[
+				"t",
+				"twitterHandle	string ν"
+			],
+			[
+				"E",
+				"Error	error ν"
+			],
+			[
+				"For",
+				"FormValue	string ƒ"
+			],
+			[
 				"Hand",
 				"HandleFunc	*mux.Route ƒ"
 			],
@@ -372,14 +404,6 @@
 				"URL	*url.URL ν"
 			],
 			[
-				"For",
-				"Form	url.Values ν"
-			],
-			[
-				"POs",
-				"PostForm	url.Values ν"
-			],
-			[
 				"form",
 				"FormValue	string ƒ"
 			],
@@ -476,10 +500,6 @@
 				"ioutil	 package ρ"
 			],
 			[
-				"F",
-				"Form	url.Values ν"
-			],
-			[
 				"Pr",
 				"Println	 ƒ"
 			],
@@ -494,26 +514,6 @@
 			[
 				"new",
 				"NewRouter	martini.Router ƒ"
-			],
-			[
-				"Ren",
-				"Render	interface ¡"
-			],
-			[
-				"D",
-				"DB	struct ʈ"
-			],
-			[
-				"init",
-				"intializeDatabase	error ƒ"
-			],
-			[
-				"im",
-				"import	import (...) ʂ"
-			],
-			[
-				"respo",
-				"ResponseWriter	interface ¡"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "kernel.go",
 			"settings":
 			{
-				"buffer_size": 705,
+				"buffer_size": 728,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,15 +531,42 @@
 			"file": "views/home.ace",
 			"settings":
 			{
-				"buffer_size": 3189,
+				"buffer_size": 3813,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "dbHelper/dbHelper.go",
+			"file": "public/less/bootstrap-markdown.less",
 			"settings":
 			{
-				"buffer_size": 693,
+				"buffer_size": 3299,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/README.md",
+			"settings":
+			{
+				"buffer_size": 968,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "migrations.go",
+			"settings":
+			{
+				"buffer_size": 188,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "package dbWrapper\n\nimport (\n	\"github.com/jinzhu/gorm\"\n	_ \"github.com/lib/pq\"\n	\"os\"\n)\n\nvar db gorm.DB\n\nfunc DB() *gorm.DB {\n	return &db\n}\n\nfunc IntializeDatabase() error {\n	switch os.Getenv(\"ENV\") {\n	case \"dev\":\n		db, _ = gorm.Open(\"postgres\", \"host=localhost user=postgres password=amd3116 dbname=loveGo sslmode=disable\")\n		break\n	}\n	// Get database connection handle [*sql.DB](http://golang.org/pkg/database/sql/#DB)\n	db.DB()\n	// Then you could invoke `*sql.DB`'s functions with it\n	err := db.DB().Ping()\n	if err != nil {\n		return err\n	}\n	db.LogMode(true)\n	db.DB().SetMaxIdleConns(10)\n	db.DB().SetMaxOpenConns(100)\n	// Disable table name's pluralization\n	db.SingularTable(false)\n	return nil\n}\n",
+			"file": "dbHelper/dbHelper.go",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 694,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,7 +574,15 @@
 			"file": "models/post.go",
 			"settings":
 			{
-				"buffer_size": 351,
+				"buffer_size": 713,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "dbWrapper/dbWrapper.go",
+			"settings":
+			{
+				"buffer_size": 637,
 				"line_ending": "Unix"
 			}
 		},
@@ -555,7 +590,7 @@
 			"file": "models/user.go",
 			"settings":
 			{
-				"buffer_size": 238,
+				"buffer_size": 520,
 				"line_ending": "Unix"
 			}
 		},
@@ -563,23 +598,52 @@
 			"file": "routes.go",
 			"settings":
 			{
-				"buffer_size": 166,
+				"buffer_size": 386,
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "package controllers\n\nimport (\n	\"log\"\n	\"love_golang/models\"\n	\"net/http\"\n)\n\nfunc CreatePost(rw http.ResponseWriter, req *http.Request) {\n	log.Println(\"Creating a post\", req.FormValue(\"post\"))\n	if req.FormValue(\"post\") == \"\" {\n		http.Redirect(rw, req, \"/\", http.StatusSeeOther)\n		return\n	}\n	twitterHandle := req.FormValue(\"twitter_handle\")\n	if twitterHandle == \"\" {\n		twitterHandle = \"@anonymous\"\n	}\n	user := models.User{TwitterHandle: twitterHandle}\n	user.Save()\n	log.Println(\"User id is\", user.Id)\n	post := models.Post{Post: req.FormValue(\"post\"), PostedByUserId: user.Id}\n	post.Save()\n	http.Redirect(rw, req, \"/\", http.StatusSeeOther)\n}\n\n\nfunc Upvote(rw http.ResponseWriter, req *http.Request){\n	\n}",
 			"file": "controllers/postController.go",
+			"file_size": 637,
+			"file_write_time": 130584477640000000,
 			"settings":
 			{
-				"buffer_size": 109,
+				"buffer_size": 698,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "controllers/jsonResponse.go",
+			"settings":
+			{
+				"buffer_size": 381,
+				"line_ending": "Unix",
+				"name": "package controllers"
+			}
+		},
+		{
+			"file": "controllers/controllerHelper.go",
+			"settings":
+			{
+				"buffer_size": 931,
+				"line_ending": "Unix",
+				"name": "package controllers"
 			}
 		},
 		{
 			"file": "controllers/uiController.go",
 			"settings":
 			{
-				"buffer_size": 395,
+				"buffer_size": 660,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "controllers/userController.go",
+			"settings":
+			{
+				"buffer_size": 688,
 				"line_ending": "Unix"
 			}
 		}
@@ -642,11 +706,19 @@
 	[
 		"/Users/akshay/CodeBase/love_golang/src/love_golang",
 		"/Users/akshay/CodeBase/love_golang/src/love_golang/controllers",
-		"/Users/akshay/CodeBase/love_golang/src/love_golang/dbHelper",
-		"/Users/akshay/CodeBase/love_golang/src/love_golang/models"
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/dbWrapper",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/models",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/public",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/public/css",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/public/js",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/public/less",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/views"
 	],
 	"file_history":
 	[
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/public/js/bootstrap-markdown.js",
+		"/Users/akshay/CodeBase/love_golang/src/love_golang/Procfile",
+		"/Users/akshay/Library/Application Support/Sublime Text 3/Packages/User/GoSublime.sublime-settings",
 		"/Users/akshay/CodeBase/love_golang/src/love_golang/Godeps/_workspace/src/github.com/yosssi/ace/element.go",
 		"/Users/akshay/CodeBase/love_golang/src/love_golang/controllers/postController.go",
 		"/Users/akshay/CodeBase/love_golang/src/love_golang/kernel.go",
@@ -714,7 +786,6 @@
 		"/Users/akshay/CodeBase/keen-server/src/keen_webapp/Godeps/_workspace/src/github.com/lib/pq/user_posix.go",
 		"/Users/akshay/CodeBase/keen-server/src/keen_webapp/Godeps/_workspace/src/github.com/yosssi/ace/options.go",
 		"/Users/akshay/Library/Application Support/Sublime Text 3/Packages/GoSublime/GoSublime.sublime-settings",
-		"/Users/akshay/Library/Application Support/Sublime Text 3/Packages/User/GoSublime.sublime-settings",
 		"/Users/akshay/Library/Application Support/Sublime Text 3/Packages/User/GoSublime/osx-x64/log.txt",
 		"/Users/akshay/Library/Application Support/Sublime Text 3/Packages/GoSublime/Default (OSX).sublime-keymap",
 		"/Users/akshay/CodeBase/keen-server/src/keen_webapp/view/templates/user_dashboard_page.ace",
@@ -772,19 +843,18 @@
 		"/Users/akshay/CodeBase/keen-server/src/webapp/main.go",
 		"/Users/akshay/CodeBase/keen-server/src/webapp/user/user.go",
 		"/Users/akshay/CodeBase/keen-server/src/webapp/user/controller.go",
-		"/Users/akshay/CodeBase/keen-server/src/webapp/database/database.go",
-		"/Users/akshay/CodeBase/keen-server/src/webapp/Procfile",
-		"/Users/akshay/CodeBase/keen-server/src/webapp/user/preferences.go"
+		"/Users/akshay/CodeBase/keen-server/src/webapp/database/database.go"
 	],
 	"find":
 	{
-		"height": 30.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
 		"height": 102.0,
 		"where_history":
 		[
+			"/Users/akshay/CodeBase/love_golang",
 			"/Users/akshay/CodeBase/keen-server/src/keen_webapp/",
 			"/Users/akshay/CodeBase/keen-server/src/keen_webapp/controllers",
 			"/Users/akshay/CodeBase/keen-server/src/keen_webapp"
@@ -795,6 +865,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"markdown-editable",
+			"nil",
+			"Post",
+			"data",
+			",\n",
 			"5px",
 			"6px",
 			"start",
@@ -850,7 +925,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -859,15 +934,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 705,
+						"buffer_size": 728,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								478,
-								478
+								463,
+								463
 							]
 						],
 						"settings":
@@ -875,11 +950,11 @@
 							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 1.0,
-						"translation.y": 0.0,
+						"translation.x": 0.0,
+						"translation.y": 116.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -888,15 +963,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3189,
+						"buffer_size": 3813,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								998,
-								998
+								2193,
+								2193
 							]
 						],
 						"settings":
@@ -907,85 +982,85 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1216.0,
+						"translation.y": 483.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "public/less/bootstrap-markdown.less",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3299,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17,
+								25
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "dbHelper/dbHelper.go",
-					"semi_transient": false,
+					"buffer": 3,
+					"file": "public/README.md",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 693,
+						"buffer_size": 968,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								159,
-								142
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 23.0,
+						"translation.y": 21.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "models/post.go",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 351,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								348,
-								348
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 100.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
 					"buffer": 4,
-					"file": "models/user.go",
+					"file": "migrations.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 238,
+						"buffer_size": 188,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								202,
-								202
+								188,
+								188
 							]
 						],
 						"settings":
@@ -998,24 +1073,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "routes.go",
+					"file": "dbHelper/dbHelper.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 166,
+						"buffer_size": 694,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								163,
-								163
+								17,
+								17
 							]
 						],
 						"settings":
@@ -1027,24 +1102,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "controllers/postController.go",
+					"file": "models/post.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 109,
+						"buffer_size": 713,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								106,
-								106
+								213,
+								213
 							]
 						],
 						"settings":
@@ -1053,27 +1128,86 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 35.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
 					"buffer": 7,
-					"file": "controllers/uiController.go",
+					"file": "dbWrapper/dbWrapper.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 395,
+						"buffer_size": 637,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								29,
-								29
+								261,
+								261
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 138.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "models/user.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 520,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								517,
+								517
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "routes.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 386,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								341,
+								341
 							]
 						],
 						"settings":
@@ -1086,6 +1220,153 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "controllers/postController.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 698,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								696,
+								696
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 28.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "controllers/jsonResponse.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 381,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								381,
+								381
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package controllers",
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "controllers/controllerHelper.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								931,
+								931
+							]
+						],
+						"settings":
+						{
+							"auto_name": "package controllers",
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "controllers/uiController.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 660,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								397,
+								397
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "controllers/userController.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 688,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								437,
+								437
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -1170,11 +1451,27 @@
 		"selected_items":
 		[
 			[
-				"ker",
-				"kernel.go"
+				"ui",
+				"controllers/uiController.go"
 			],
 			[
 				"",
+				"controllers/uiController.go"
+			],
+			[
+				"po",
+				"models/post.go"
+			],
+			[
+				"post",
+				"controllers/postController.go"
+			],
+			[
+				"con",
+				"controllers/postController.go"
+			],
+			[
+				"ker",
 				"kernel.go"
 			],
 			[
@@ -1224,10 +1521,6 @@
 			[
 				"auth",
 				"controllers/authenticationHandler.go"
-			],
-			[
-				"ui",
-				"controllers/uiController.go"
 			],
 			[
 				"usercon",
@@ -1428,10 +1721,6 @@
 			[
 				"db",
 				"db_helper.go"
-			],
-			[
-				"con",
-				"controllers/controllerHelper.go"
 			],
 			[
 				"qa",
